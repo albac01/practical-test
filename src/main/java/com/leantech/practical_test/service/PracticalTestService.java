@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.leantech.practical_test.dto.DataOperationResultDTO;
+import com.leantech.practical_test.dto.PositionListDTO;
 import com.leantech.practical_test.model.dto.EmployeeDTO;
 
 /**
@@ -38,5 +39,5 @@ public interface PracticalTestService {
 	/**
 	 * Service used to list positions
 	 * */
-	public DataOperationResultDTO<?> listPositions();
+	public DataOperationResultDTO<List<PositionListDTO>> listPositions();
 }

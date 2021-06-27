@@ -1,6 +1,8 @@
 package com.leantech.practical_test.controller;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -86,7 +89,7 @@ public class PracticalTestController {
 			operationResult = service.createEmployee(emp);
 
 			if (operationResult.getResult().equals(Constants.FAILURE)) {
-				logger.warn("The employee was not recorder");
+				logger.warn("The employee was not recorded");
 			}
 
 			response = toObjectNode(operationResult);
@@ -141,14 +144,14 @@ public class PracticalTestController {
 		logger.info("Employee update operation completed");
 		return ResponseEntity.ok().body(response);
 	}
-	
+
 	/**
 	 * Delete Employee
 	 * 
 	 * @return JSON response with the status of the operation
 	 */
 	@DeleteMapping(path = "/employee/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ObjectNode> deleteEmployee(@PathVariable String id){
+	public ResponseEntity<ObjectNode> deleteEmployee(@PathVariable String id) {
 		logger.info("Initiating delete employee operation");
 
 		ObjectNode response = null;
@@ -161,6 +164,58 @@ public class PracticalTestController {
 		response = toObjectNode(operationResult);
 
 		logger.info("Delete employee operation completed");
+		return ResponseEntity.ok().body(response);
+	}
+
+	/**
+	 * List employees
+	 * 
+	 * @param personName   Optional search criteria for the name of the employee
+	 * @param positionName Optional search criteria for the position name
+	 * @return JSON response with the status of the operation and list of the
+	 *         matching employees
+	 */
+	@GetMapping(path = "/employee/list", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<ObjectNode> listEmployees(@RequestParam(name = "person", required = false) String personName,
+	        @RequestParam(name = "position", required = false) String positionName) {
+		logger.info("Initiating employee listing operation");
+
+		ObjectNode response = null;
+
+		Map<String, String> criteria = new HashMap<>();
+		if (personName != null && !personName.isEmpty()) {
+			criteria.put(Constants.PERSON_NAME_CRITERIA, personName);
+		}
+
+		if (positionName != null && !positionName.isEmpty()) {
+			criteria.put(Constants.POSITION_NAME_CRITERIA, positionName);
+		}
+
+		DataOperationResultDTO<?> operationResult = service.listEmployees(criteria);
+
+		response = toObjectNode(operationResult);
+
+		logger.info("List employees operation completed");
+		return ResponseEntity.ok().body(response);
+	}
+
+	/**
+	 * List positions
+	 * 
+	 * @return JSON response with the status of the operation and a list of
+	 *         employees sorted by position
+	 */
+	@ GetMapping(path = "/position/list", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<ObjectNode> listPositions(){
+		logger.info("Initiating position listing operation");
+
+		ObjectNode response = null;
+		
+		DataOperationResultDTO<?> operationResult = service.listPositions();
+
+		response = toObjectNode(operationResult);
+		
+		logger.info("List positions operation completed");
 		return ResponseEntity.ok().body(response);
 	}
 

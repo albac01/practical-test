@@ -1,8 +1,12 @@
 package com.leantech.practical_test.service.impl;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.leantech.practical_test.dto.DataOperationResultDTO;
+import com.leantech.practical_test.dto.PositionListDTO;
 import com.leantech.practical_test.model.Employee;
 import com.leantech.practical_test.model.Person;
 import com.leantech.practical_test.model.PersonPosition;
@@ -31,6 +36,8 @@ import com.leantech.practical_test.util.Constants;
 public class PracticalTestServiceImpl implements PracticalTestService {
 	/** Console logger */
 	private static final Logger logger = LoggerFactory.getLogger(PracticalTestServiceImpl.class);
+
+	private static final String EMPLOYEE_NOT_FOUND = "The employee was not found";
 
 	@Autowired
 	private PersonRepository perRepo;
@@ -123,9 +130,9 @@ public class PracticalTestServiceImpl implements PracticalTestService {
 
 			Optional<Employee> optEmp = empRepo.findByPersonId(empDTO.getPerson().getId());
 			if (!optEmp.isPresent()) {
-				logger.debug("The employee was not found");
+				logger.debug(EMPLOYEE_NOT_FOUND);
 				result.setResult(Constants.FAILURE);
-				result.setMotive("The employee was not found");
+				result.setMotive(EMPLOYEE_NOT_FOUND);
 				return result;
 			}
 
@@ -168,9 +175,9 @@ public class PracticalTestServiceImpl implements PracticalTestService {
 
 			Optional<Employee> optEmp = empRepo.findByPersonId(perId);
 			if (!optEmp.isPresent()) {
-				logger.debug("The employee was not found");
+				logger.debug(EMPLOYEE_NOT_FOUND);
 				result.setResult(Constants.FAILURE);
-				result.setMotive("The employee was not found");
+				result.setMotive(EMPLOYEE_NOT_FOUND);
 				return result;
 			}
 
@@ -197,7 +204,27 @@ public class PracticalTestServiceImpl implements PracticalTestService {
 	 * util.Map)
 	 */
 	public DataOperationResultDTO<List<EmployeeDTO>> listEmployees(Map<String, String> criteria) {
-		return null;
+		logger.debug("Initiating employee listing");
+
+		DataOperationResultDTO<List<EmployeeDTO>> result = new DataOperationResultDTO<>(
+		        Constants.OPERATION_LIST_EMPLOYEES, Constants.SUCCESS, null, null);
+
+		try {
+			List<EmployeeDTO> resultData = getEmployeesByCriteria(criteria);
+			
+			if(resultData.isEmpty()) {
+				result.setMotive("No employees matched the given criteria");
+			}
+
+			result.setResponseObject(resultData);
+		} catch (Exception e) {
+			logger.error("Employee deletion failed");
+			result.setResult(Constants.FAILURE);
+			result.setMotive(e.getLocalizedMessage());
+		}
+
+		logger.debug("Finishing employee listing");
+		return result;
 	}
 
 	/*
@@ -205,8 +232,35 @@ public class PracticalTestServiceImpl implements PracticalTestService {
 	 * 
 	 * @see com.leantech.practical_test.service.PracticalTestService#listPositions()
 	 */
-	public DataOperationResultDTO<?> listPositions() {
-		return null;
+	public DataOperationResultDTO<List<PositionListDTO>> listPositions() {
+		logger.debug("Initiating position listing");
+
+		DataOperationResultDTO<List<PositionListDTO>> result = new DataOperationResultDTO<>(
+		        Constants.OPERATION_LIST_EMPLOYEES, Constants.SUCCESS, null, null);
+
+		List<EmployeeDTO> employeeData = getEmployeesByCriteria(Collections.emptyMap());
+		
+		if(employeeData.isEmpty()) {
+			result.setMotive("No employees to list");
+		}
+		
+		Map<Integer, PositionListDTO> orderMap = new HashMap<>();
+		
+		for (EmployeeDTO emp : employeeData) {
+			PositionListDTO pos = orderMap.get(emp.getPosition().getId());
+			if(pos == null) {
+				pos = new PositionListDTO(emp.getPosition().getId(), emp.getPosition().getName());
+				orderMap.put(pos.getPositionId(), pos);
+			}
+			
+			pos.addEmployee(emp);
+		}
+		
+		List<PositionListDTO> resultData = orderMap.values().stream().collect(Collectors.toList());
+		result.setResponseObject(resultData);
+		
+		logger.debug("Finishing position listing");
+		return result;
 	}
 
 	/**
@@ -259,6 +313,16 @@ public class PracticalTestServiceImpl implements PracticalTestService {
 		empRepo.save(emp);
 
 		logger.debug("Finishing employee data update");
+	}
+	
+	/**
+	 * Lists employees by criteria
+	 * */
+	private List<EmployeeDTO> getEmployeesByCriteria(Map<String, String> criteria){
+		Collection<Employee> rawData = empRepo.listByCriteria(criteria.get(Constants.PERSON_NAME_CRITERIA),
+		        criteria.get(Constants.POSITION_NAME_CRITERIA));
+		
+		return rawData.stream().map(i -> new EmployeeDTO(i)).collect(Collectors.toList());
 	}
 
 }

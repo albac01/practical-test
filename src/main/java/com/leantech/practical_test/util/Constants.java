@@ -36,4 +36,9 @@ public final class Constants {
 	public static final String CITY_NAME = "cityName";
 	public static final String POSITION = "Position";
 	public static final String SALARY = "salary";
+	
+	// search criteria fields
+	public static final String PERSON_NAME_CRITERIA = "personName";
+	public static final String POSITION_NAME_CRITERIA = "positionName";
+	
 }
