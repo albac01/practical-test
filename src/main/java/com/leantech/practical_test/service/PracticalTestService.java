@@ -29,7 +29,7 @@ public interface PracticalTestService {
 	/**
 	 * Service used to remove an employee
 	 * */
-	public DataOperationResultDTO<?> removeEmployee(String perId);
+	public DataOperationResultDTO<String> removeEmployee(String perId);
 
 	/**
 	 * Service used to list employees

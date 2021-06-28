@@ -205,16 +205,16 @@ public class PracticalTestController {
 	 * @return JSON response with the status of the operation and a list of
 	 *         employees sorted by position
 	 */
-	@ GetMapping(path = "/position/list", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ObjectNode> listPositions(){
+	@GetMapping(path = "/position/list", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<ObjectNode> listPositions() {
 		logger.info("Initiating position listing operation");
 
 		ObjectNode response = null;
-		
+
 		DataOperationResultDTO<?> operationResult = service.listPositions();
 
 		response = toObjectNode(operationResult);
-		
+
 		logger.info("List positions operation completed");
 		return ResponseEntity.ok().body(response);
 	}
@@ -270,7 +270,9 @@ public class PracticalTestController {
 	private EmployeeDTO mapEmployee(JsonNode jsonNode, boolean isUpdate) throws IOException {
 		logger.debug("Converting employee JSON representation to DTO representation");
 		// checks the presence of person ID
-		if (!jsonNode.has(Constants.PERSON) || !jsonNode.get(Constants.PERSON).has(Constants.ID)) {
+		if (!jsonNode.has(Constants.PERSON) || !jsonNode.get(Constants.PERSON).has(Constants.ID)
+		        || jsonNode.get(Constants.PERSON).get(Constants.ID) == null
+		        || jsonNode.get(Constants.PERSON).get(Constants.ID).asText().isEmpty()) {
 			throw new IOException();
 		}
 

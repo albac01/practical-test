@@ -118,35 +118,28 @@ public class PracticalTestServiceImpl implements PracticalTestService {
 
 		Employee emp = null;
 
-		try {
-			// the employee is found by it's person ID
-			if (empDTO.getPerson() == null || empDTO.getPerson().getId() == null
-			        || empDTO.getPerson().getId().isEmpty()) {
-				logger.debug("The candidate ID was not included");
-				result.setResult(Constants.FAILURE);
-				result.setMotive("The candidate ID was not included");
-				return result;
-			}
-
-			Optional<Employee> optEmp = empRepo.findByPersonId(empDTO.getPerson().getId());
-			if (!optEmp.isPresent()) {
-				logger.debug(EMPLOYEE_NOT_FOUND);
-				result.setResult(Constants.FAILURE);
-				result.setMotive(EMPLOYEE_NOT_FOUND);
-				return result;
-			}
-
-			emp = optEmp.get();
-
-			updateData(emp, empDTO);
-
-			result.setResponseObject(new EmployeeDTO(emp));
-		} catch (Exception e) {
-			logger.error("Employee update failed");
+		// the employee is found by it's person ID
+		if (empDTO.getPerson() == null || empDTO.getPerson().getId() == null
+		        || empDTO.getPerson().getId().isEmpty()) {
+			logger.debug("The candidate ID was not included");
 			result.setResult(Constants.FAILURE);
-			result.setMotive(e.getLocalizedMessage());
+			result.setMotive("The candidate ID was not included");
+			return result;
 		}
 
+		Optional<Employee> optEmp = empRepo.findByPersonId(empDTO.getPerson().getId());
+		if (!optEmp.isPresent()) {
+			logger.debug(EMPLOYEE_NOT_FOUND);
+			result.setResult(Constants.FAILURE);
+			result.setMotive(EMPLOYEE_NOT_FOUND);
+			return result;
+		}
+
+		emp = optEmp.get();
+
+		updateData(emp, empDTO);
+
+		result.setResponseObject(new EmployeeDTO(emp));
 		logger.debug("Finishing employee update");
 		return result;
 	}
@@ -158,7 +151,7 @@ public class PracticalTestServiceImpl implements PracticalTestService {
 	 * com.leantech.practical_test.service.PracticalTestService#removeEmployee(java.
 	 * lang.String)
 	 */
-	public DataOperationResultDTO<?> removeEmployee(String perId) {
+	public DataOperationResultDTO<String> removeEmployee(String perId) {
 		logger.debug("Initiating employee deletion");
 
 		DataOperationResultDTO<String> result = new DataOperationResultDTO<>(Constants.OPERATION_DELETE_EMPLOYEE,
@@ -209,20 +202,13 @@ public class PracticalTestServiceImpl implements PracticalTestService {
 		DataOperationResultDTO<List<EmployeeDTO>> result = new DataOperationResultDTO<>(
 		        Constants.OPERATION_LIST_EMPLOYEES, Constants.SUCCESS, null, null);
 
-		try {
-			List<EmployeeDTO> resultData = getEmployeesByCriteria(criteria);
-			
-			if(resultData.isEmpty()) {
-				result.setMotive("No employees matched the given criteria");
-			}
-
-			result.setResponseObject(resultData);
-		} catch (Exception e) {
-			logger.error("Employee deletion failed");
-			result.setResult(Constants.FAILURE);
-			result.setMotive(e.getLocalizedMessage());
+		List<EmployeeDTO> resultData = getEmployeesByCriteria(criteria);
+		
+		if(resultData.isEmpty()) {
+			result.setMotive("No employees matched the given criteria");
 		}
 
+		result.setResponseObject(resultData);
 		logger.debug("Finishing employee listing");
 		return result;
 	}

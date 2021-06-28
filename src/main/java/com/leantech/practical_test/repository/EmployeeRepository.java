@@ -1,6 +1,6 @@
 package com.leantech.practical_test.repository;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Query;
@@ -37,6 +37,6 @@ public interface EmployeeRepository extends CrudRepository<Employee, Integer> {
 	        + "inner join position p on e.position = p.id "
 	        + "where (:personName is null or lower(c.name) like lower(concat('%',:personName,'%')) or lower(c.lastname) like lower(concat('%',:personName,'%'))) "
 	        + "and (:positionName is null or lower(p.name) like lower(concat('%',:positionName,'%')))", nativeQuery = true)
-	public Collection<Employee> listByCriteria(@Param("personName") String personName,
+	public List<Employee> listByCriteria(@Param("personName") String personName,
 	        @Param("positionName") String positionName);
 }
