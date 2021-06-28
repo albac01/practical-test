@@ -1,0 +1,204 @@
+{
+	"info": {
+		"_postman_id": "0fe6d632-7075-42aa-bd93-9a048b21af13",
+		"name": "Personal",
+		"description": "In order to run the test, set <b>{{domain}}</b> with:\n\nRemote testing: https://leantech-practical-test.herokuapp.com\n\nLocal testing: http://localhost:8083",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Lean Tech - practical test",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain}}/api/v1/practical-test/health",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"practical-test",
+								"health"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Employee",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"person\": {\r\n        \"id\": \"16079491\",\r\n        \"name\": \"Alfonso\",\r\n        \"lastName\": \"Baquero\",\r\n        \"adress\": \"Cra 49 #39G-07\",\r\n        \"cellPhone\": \"3006158501\",\r\n        \"cityName\": \"Manizales\"\r\n    },\r\n    \"Position\":{\r\n        \"id\":\"1\",\r\n        \"name\":\"Backend developer\"\r\n    }, \r\n    \"salary\":2500\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/v1/practical-test/employee",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"practical-test",
+								"employee"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Employee",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"person\": {\r\n        \"id\": \"16079491\",\r\n        \"lastName\": \"Baquero Echeverry\",\r\n        \"cellPhone\": \"+57 3006158501\"\r\n    },\r\n    \"Position\":{\r\n        \"id\":\"2\",\r\n        \"name\":\"Senior Backend developer\"\r\n    }, \r\n    \"salary\":5000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{domain}}/api/v1/practical-test/employee",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"practical-test",
+								"employee"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Employee",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain}}/api/v1/practical-test/employee/16079491",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"practical-test",
+								"employee",
+								"16079491"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List employees",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain}}/api/v1/practical-test/employee/list",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"practical-test",
+								"employee",
+								"list"
+							],
+							"query": [
+								{
+									"key": "position",
+									"value": "developer",
+									"disabled": true
+								},
+								{
+									"key": "person",
+									"value": "alfonso",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Positions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{domain}}/api/v1/practical-test/position/list",
+							"host": [
+								"{{domain}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"practical-test",
+								"position",
+								"list"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
