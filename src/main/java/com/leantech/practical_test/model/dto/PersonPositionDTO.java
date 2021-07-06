@@ -26,8 +26,10 @@ public class PersonPositionDTO implements Serializable {
 
 	/** Returns a <code>PersonPosition</code> entity version of the DTO */
 	public PersonPosition toEntity() {
-		PersonPosition pp = new PersonPosition();		
-		pp.setId(this.getId());
+		PersonPosition pp = new PersonPosition();
+		if(this.getId() != null) {
+			pp.setId(this.getId());
+		}
 		pp.setName(this.getName());		
 		return pp;
 	}

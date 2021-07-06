@@ -34,7 +34,7 @@ public final class Constants {
 	public static final String ADDRESS = "adress";
 	public static final String CELLPHONE = "cellPhone";
 	public static final String CITY_NAME = "cityName";
-	public static final String POSITION = "Position";
+	public static final String POSITION = "position";
 	public static final String SALARY = "salary";
 	
 	// search criteria fields

@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -19,6 +20,7 @@ public class PersonPosition implements Serializable{
 
 	/** Position's ID */
 	@Id
+	@GeneratedValue
 	private int id;
 	
 	/** Position's name */
